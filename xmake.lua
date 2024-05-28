@@ -1,0 +1,15 @@
+set_project("tomlpp")
+set_version("1.0.0")
+add_requires("opencv", {system = true})
+
+target("tomlpp")
+    set_kind("static")
+    set_languages("gnuxx2b")
+    add_packages("opencv")
+    add_files("./tomlpp.hpp",{rule = "c++"})
+
+target("example")
+    set_kind("binary")
+    set_languages("gnuxx2b")
+    add_packages("opencv")
+    add_files("./example.cpp")
