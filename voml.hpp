@@ -11,7 +11,7 @@
 #include <vector>
 #include "toml11/toml.hpp"
 
-namespace tomlpp {
+namespace voml {
 class CastException : public std::exception {
    public:
     explicit CastException(std::string_view content) : content_(content) {}
@@ -48,7 +48,7 @@ cv::Mat Toml2Mat(const toml::basic_value<C, M, A>& v) {
     int rows = toml::find<int>(v, "rows");
     int cols = toml::find<int>(v, "cols");
     std::vector<int> shape{rows, cols};
-    return tomlpp::Vector2Mat(toml::find<std::vector<T>>(v, "data"), shape);
+    return voml::Vector2Mat(toml::find<std::vector<T>>(v, "data"), shape);
 }
 
 template <typename T>
@@ -79,7 +79,7 @@ toml::value Mat2Toml(cv::Mat mat) {
     return toml::value{{"rows", rows}, {"cols", cols}, {"dt", dt}, {"data", data}};
 }
 
-}  // namespace tomlpp
+}  // namespace voml
 
 namespace toml {
 template <>
@@ -88,21 +88,21 @@ struct from<cv::Mat> {
     static cv::Mat from_toml(const basic_value<C, M, A>& v) {
         switch (find<std::string>(v, "dt")[0]) {
             case 'u':
-                return tomlpp::Toml2Mat<uchar>(v);
+                return voml::Toml2Mat<uchar>(v);
             case 'c':
-                return tomlpp::Toml2Mat<char>(v);
+                return voml::Toml2Mat<char>(v);
             case 'w':
-                return tomlpp::Toml2Mat<ushort>(v);
+                return voml::Toml2Mat<ushort>(v);
             case 's':
-                return tomlpp::Toml2Mat<short>(v);
+                return voml::Toml2Mat<short>(v);
             case 'i':
-                return tomlpp::Toml2Mat<int>(v);
+                return voml::Toml2Mat<int>(v);
             case 'f':
-                return tomlpp::Toml2Mat<float>(v);
+                return voml::Toml2Mat<float>(v);
             case 'd':
-                return tomlpp::Toml2Mat<double>(v);
+                return voml::Toml2Mat<double>(v);
             default:
-                throw tomlpp::CastException{"Unknow dt"};
+                throw voml::CastException{"Unknow dt"};
         }
     }
 };
@@ -112,21 +112,21 @@ struct into<cv::Mat> {
     static toml::value into_toml(const cv::Mat& mat) {
         switch (mat.type()) {
             case 0:
-                return tomlpp::Mat2Toml<uchar>(mat);
+                return voml::Mat2Toml<uchar>(mat);
             case 1:
-                return tomlpp::Mat2Toml<char>(mat);
+                return voml::Mat2Toml<char>(mat);
             case 2:
-                return tomlpp::Mat2Toml<ushort>(mat);
+                return voml::Mat2Toml<ushort>(mat);
             case 3:
-                return tomlpp::Mat2Toml<short>(mat);
+                return voml::Mat2Toml<short>(mat);
             case 4:
-                return tomlpp::Mat2Toml<int>(mat);
+                return voml::Mat2Toml<int>(mat);
             case 5:
-                return tomlpp::Mat2Toml<float>(mat);
+                return voml::Mat2Toml<float>(mat);
             case 6:
-                return tomlpp::Mat2Toml<double>(mat);
+                return voml::Mat2Toml<double>(mat);
             default:
-                throw tomlpp::CastException{"Unknow type"};
+                throw voml::CastException{"Unknow type"};
         }
     }
 };
