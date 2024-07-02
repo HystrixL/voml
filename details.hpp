@@ -7,8 +7,11 @@
 #include <opencv2/core/traits.hpp>
 #include <string>
 #include <string_view>
+#include <tuple>
 #include <type_traits>
+#include <variant>
 #include <vector>
+#include "macro.hpp"
 #include "toml11/toml.hpp"
 
 namespace voml {
@@ -65,6 +68,26 @@ template <typename Tp, typename C, template <typename...> class M, template <typ
 cv::Point3_<Tp> Toml2Point3(const toml::basic_value<C, M, A>& v) {
     return cv::Point3_<Tp>{toml::find<Tp>(v, "x"), toml::find<Tp>(v, "y"), toml::find<Tp>(v, "z")};
 }
+template <typename Tp>
+std::string MapCvType() {
+    if constexpr (std ::is_same_v<Tp, uchar>) {
+        return "u";
+    } else if constexpr (std ::is_same_v<Tp, char>) {
+        return "c";
+    } else if constexpr (std ::is_same_v<Tp, ushort>) {
+        return "w";
+    } else if constexpr (std ::is_same_v<Tp, short>) {
+        return "s";
+    } else if constexpr (std ::is_same_v<Tp, int>) {
+        return "i";
+    } else if constexpr (std ::is_same_v<Tp, float>) {
+        return "f";
+    } else if constexpr (std ::is_same_v<Tp, double>) {
+        return "d";
+    } else {
+        return "?";
+    }
+}
 
 template <typename T>
 toml::value Mat2Toml(cv::Mat mat) {
@@ -73,75 +96,24 @@ toml::value Mat2Toml(cv::Mat mat) {
     auto totalSize = rows * cols;
     std::vector<T> data(totalSize);
     memcpy(data.data(), mat.data, totalSize * sizeof(T));
-    std::string dt{};
-    if constexpr (std::is_same_v<T, uchar>) {
-        dt = "u";
-    } else if constexpr (std::is_same_v<T, char>) {
-        dt = "c";
-    } else if constexpr (std::is_same_v<T, ushort>) {
-        dt = "w";
-    } else if constexpr (std::is_same_v<T, short>) {
-        dt = "s";
-    } else if constexpr (std::is_same_v<T, int>) {
-        dt = "i";
-    } else if constexpr (std::is_same_v<T, float>) {
-        dt = "f";
-    } else if constexpr (std::is_same_v<T, double>) {
-        dt = "d";
-    } else {
-        dt = "?";
-    }
-    return toml::value{{"rows", rows}, {"cols", cols}, {"dt", dt}, {"data", data}};
+
+    return toml::value{{"rows", rows}, {"cols", cols}, {"dt", MapCvType<T>()}, {"data", data}};
 }
 
 template <typename Tp>
 toml::value Size2Toml(cv::Size_<Tp> size) {
     Tp width = size.width;
     Tp height = size.height;
-    std::string dt{};
-    if constexpr (std::is_same_v<Tp, uchar>) {
-        dt = "u";
-    } else if constexpr (std::is_same_v<Tp, char>) {
-        dt = "c";
-    } else if constexpr (std::is_same_v<Tp, ushort>) {
-        dt = "w";
-    } else if constexpr (std::is_same_v<Tp, short>) {
-        dt = "s";
-    } else if constexpr (std::is_same_v<Tp, int>) {
-        dt = "i";
-    } else if constexpr (std::is_same_v<Tp, float>) {
-        dt = "f";
-    } else if constexpr (std::is_same_v<Tp, double>) {
-        dt = "d";
-    } else {
-        dt = "?";
-    }
-    return toml::value{{"width", width}, {"height", height}, {"dt", dt}};
+
+    return toml::value{{"width", width}, {"height", height}, {"dt", MapCvType<Tp>()}};
 }
 
 template <typename Tp>
 toml::value Point2Toml(cv::Point_<Tp> point) {
     Tp x = point.x;
     Tp y = point.y;
-    std::string dt{};
-    if constexpr (std::is_same_v<Tp, uchar>) {
-        dt = "u";
-    } else if constexpr (std::is_same_v<Tp, char>) {
-        dt = "c";
-    } else if constexpr (std::is_same_v<Tp, ushort>) {
-        dt = "w";
-    } else if constexpr (std::is_same_v<Tp, short>) {
-        dt = "s";
-    } else if constexpr (std::is_same_v<Tp, int>) {
-        dt = "i";
-    } else if constexpr (std::is_same_v<Tp, float>) {
-        dt = "f";
-    } else if constexpr (std::is_same_v<Tp, double>) {
-        dt = "d";
-    } else {
-        dt = "?";
-    }
-    return toml::value{{"x", x}, {"y", y}, {"dt", dt}};
+
+    return toml::value{{"x", x}, {"y", y}, {"dt", MapCvType<Tp>()}};
 }
 
 template <typename Tp>
@@ -149,25 +121,8 @@ toml::value Point32Toml(cv::Point3_<Tp> point) {
     Tp x = point.x;
     Tp y = point.y;
     Tp z = point.z;
-    std::string dt{};
-    if constexpr (std::is_same_v<Tp, uchar>) {
-        dt = "u";
-    } else if constexpr (std::is_same_v<Tp, char>) {
-        dt = "c";
-    } else if constexpr (std::is_same_v<Tp, ushort>) {
-        dt = "w";
-    } else if constexpr (std::is_same_v<Tp, short>) {
-        dt = "s";
-    } else if constexpr (std::is_same_v<Tp, int>) {
-        dt = "i";
-    } else if constexpr (std::is_same_v<Tp, float>) {
-        dt = "f";
-    } else if constexpr (std::is_same_v<Tp, double>) {
-        dt = "d";
-    } else {
-        dt = "?";
-    }
-    return toml::value{{"x", x}, {"y", y}, {"z", z}, {"dt", dt}};
+
+    return toml::value{{"x", x}, {"y", y}, {"z", z}, {"dt", MapCvType<Tp>()}};
 }
 
 }  // namespace voml
