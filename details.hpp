@@ -61,6 +61,11 @@ cv::Point_<Tp> Toml2Point(const toml::basic_value<C, M, A>& v) {
     return cv::Point_<Tp>{toml::find<Tp>(v, "x"), toml::find<Tp>(v, "y")};
 }
 
+template <typename Tp, typename C, template <typename...> class M, template <typename...> class A>
+cv::Point3_<Tp> Toml2Point3(const toml::basic_value<C, M, A>& v) {
+    return cv::Point3_<Tp>{toml::find<Tp>(v, "x"), toml::find<Tp>(v, "y"), toml::find<Tp>(v, "z")};
+}
+
 template <typename T>
 toml::value Mat2Toml(cv::Mat mat) {
     int rows = mat.rows;
@@ -91,8 +96,8 @@ toml::value Mat2Toml(cv::Mat mat) {
 
 template <typename Tp>
 toml::value Size2Toml(cv::Size_<Tp> size) {
-    int width = size.width;
-    int height = size.height;
+    Tp width = size.width;
+    Tp height = size.height;
     std::string dt{};
     if constexpr (std::is_same_v<Tp, uchar>) {
         dt = "u";
@@ -116,8 +121,8 @@ toml::value Size2Toml(cv::Size_<Tp> size) {
 
 template <typename Tp>
 toml::value Point2Toml(cv::Point_<Tp> point) {
-    int x = point.x;
-    int y = point.y;
+    Tp x = point.x;
+    Tp y = point.y;
     std::string dt{};
     if constexpr (std::is_same_v<Tp, uchar>) {
         dt = "u";
@@ -136,7 +141,33 @@ toml::value Point2Toml(cv::Point_<Tp> point) {
     } else {
         dt = "?";
     }
-    return toml::value{{"width", x}, {"height", y}, {"dt", dt}};
+    return toml::value{{"x", x}, {"y", y}, {"dt", dt}};
+}
+
+template <typename Tp>
+toml::value Point32Toml(cv::Point3_<Tp> point) {
+    Tp x = point.x;
+    Tp y = point.y;
+    Tp z = point.z;
+    std::string dt{};
+    if constexpr (std::is_same_v<Tp, uchar>) {
+        dt = "u";
+    } else if constexpr (std::is_same_v<Tp, char>) {
+        dt = "c";
+    } else if constexpr (std::is_same_v<Tp, ushort>) {
+        dt = "w";
+    } else if constexpr (std::is_same_v<Tp, short>) {
+        dt = "s";
+    } else if constexpr (std::is_same_v<Tp, int>) {
+        dt = "i";
+    } else if constexpr (std::is_same_v<Tp, float>) {
+        dt = "f";
+    } else if constexpr (std::is_same_v<Tp, double>) {
+        dt = "d";
+    } else {
+        dt = "?";
+    }
+    return toml::value{{"x", x}, {"y", y}, {"z", z}, {"dt", dt}};
 }
 
 }  // namespace voml

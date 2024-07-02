@@ -84,47 +84,28 @@ struct from<cv::Size_<Tp>> {
 
 template <typename Tp>
 struct into<cv::Size_<Tp>> {
-    static toml::value into_toml(const cv::Size_<Tp>& size) {
-        switch (size.type()) {
-            case 0:
-                return voml::Size2Toml<uchar>(size);
-            case 1:
-                return voml::Size2Toml<char>(size);
-            case 2:
-                return voml::Size2Toml<ushort>(size);
-            case 3:
-                return voml::Size2Toml<short>(size);
-            case 4:
-                return voml::Size2Toml<int>(size);
-            case 5:
-                return voml::Size2Toml<float>(size);
-            case 6:
-                return voml::Size2Toml<double>(size);
-            default:
-                throw voml::CastException{"Unknow type"};
-        }
-    }
+    static toml::value into_toml(const cv::Size_<Tp>& size) { return voml::Size2Toml<Tp>(size); }
 };
 
 template <typename Tp>
 struct from<cv::Point_<Tp>> {
     template <typename C, template <typename...> class M, template <typename...> class A>
-    static cv::Size_<Tp> from_toml(const basic_value<C, M, A>& v) {
+    static cv::Point_<Tp> from_toml(const basic_value<C, M, A>& v) {
         switch (find<std::string>(v, "dt")[0]) {
             case 'u':
-                return voml::Toml2Size<uchar>(v);
+                return voml::Toml2Point<uchar>(v);
             case 'c':
-                return voml::Toml2Size<char>(v);
+                return voml::Toml2Point<char>(v);
             case 'w':
-                return voml::Toml2Size<ushort>(v);
+                return voml::Toml2Point<ushort>(v);
             case 's':
-                return voml::Toml2Size<short>(v);
+                return voml::Toml2Point<short>(v);
             case 'i':
-                return voml::Toml2Size<int>(v);
+                return voml::Toml2Point<int>(v);
             case 'f':
-                return voml::Toml2Size<float>(v);
+                return voml::Toml2Point<float>(v);
             case 'd':
-                return voml::Toml2Size<double>(v);
+                return voml::Toml2Point<double>(v);
             default:
                 throw voml::CastException{"Unknow dt"};
         }
@@ -133,25 +114,36 @@ struct from<cv::Point_<Tp>> {
 
 template <typename Tp>
 struct into<cv::Point_<Tp>> {
-    static toml::value into_toml(const cv::Point_<Tp>& point) {
-        switch (point.type()) {
-            case 0:
-                return voml::Size2Toml<uchar>(point);
-            case 1:
-                return voml::Size2Toml<char>(point);
-            case 2:
-                return voml::Size2Toml<ushort>(point);
-            case 3:
-                return voml::Size2Toml<short>(point);
-            case 4:
-                return voml::Size2Toml<int>(point);
-            case 5:
-                return voml::Size2Toml<float>(point);
-            case 6:
-                return voml::Size2Toml<double>(point);
+    static toml::value into_toml(const cv::Point_<Tp>& point) { return voml::Point2Toml(point); }
+};
+
+template <typename Tp>
+struct from<cv::Point3_<Tp>> {
+    template <typename C, template <typename...> class M, template <typename...> class A>
+    static cv::Point3_<Tp> from_toml(const basic_value<C, M, A>& v) {
+        switch (find<std::string>(v, "dt")[0]) {
+            case 'u':
+                return voml::Toml2Point3<uchar>(v);
+            case 'c':
+                return voml::Toml2Point3<char>(v);
+            case 'w':
+                return voml::Toml2Point3<ushort>(v);
+            case 's':
+                return voml::Toml2Point3<short>(v);
+            case 'i':
+                return voml::Toml2Point3<int>(v);
+            case 'f':
+                return voml::Toml2Point3<float>(v);
+            case 'd':
+                return voml::Toml2Point3<double>(v);
             default:
-                throw voml::CastException{"Unknow type"};
+                throw voml::CastException{"Unknow dt"};
         }
     }
+};
+
+template <typename Tp>
+struct into<cv::Point3_<Tp>> {
+    static toml::value into_toml(const cv::Point3_<Tp>& point) { return voml::Point32Toml(point); }
 };
 }  // namespace toml

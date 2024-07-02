@@ -1,3 +1,5 @@
+[mat]
+
 mat_u = { rows = 3, cols = 3, dt = "u", data = [1, 2, 3, 4, 5, 6, 7, 8, 9] }
 
 mat_c = { rows = 3, cols = 3, dt = "c", data = [
@@ -71,3 +73,16 @@ mat_d = { rows = 3, cols = 3, dt = "d", data = [
     0.0,
     1.0,
 ] }
+
+[size]
+
+sizei = { width = 100, height = 200, dt = "i" }
+sized = { width = 100.123, height = 200.456, dt = "d" }
+
+[point]
+
+point_2i = { x = 1, y = 2, dt = "i" }
+point_2f = { x = 1.3, y = 2.4, dt = "f" }
+
+point_3u = { x = 1, y = 2, z = 3, dt = "u" }
+point_3d = { x = 1.3, y = 2.4, z = 5.6, dt = "d" }
