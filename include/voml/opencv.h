@@ -1,11 +1,12 @@
 #pragma once
 
-#include <opencv2/core/hal/interface.h>
+#include <opencv2/opencv.hpp>
+
 #include <sys/types.h>
+#include <voml/details.h>
 #include <opencv2/core/persistence.hpp>
 #include <opencv2/core/traits.hpp>
 #include <string>
-#include "details.hpp"
 
 namespace toml {
 template <>

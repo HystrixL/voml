@@ -1,18 +1,14 @@
 #pragma once
 
-#include <opencv2/core/hal/interface.h>
 #include <sys/types.h>
 #include <exception>
-#include <opencv2/core/persistence.hpp>
-#include <opencv2/core/traits.hpp>
+#include <opencv2/opencv.hpp>
+
 #include <string>
 #include <string_view>
-#include <tuple>
 #include <type_traits>
-#include <variant>
 #include <vector>
-#include "macro.hpp"
-#include "toml11/toml.hpp"
+#include "toml.hpp"
 
 namespace voml {
 class CastException : public std::exception {

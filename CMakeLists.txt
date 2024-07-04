@@ -1,12 +1,12 @@
-cmake_minimum_required(VERSION 3.5)
-project(voml LANGUAGES CXX)
+file(GLOB_RECURSE srcs CONFIGURE_DEPENDES src/*.cpp)
+add_library(voml OBJECT ${srcs})
+target_include_directories(voml PUBLIC include toml11)
 
-find_package(OpenCV REQUIRED)
-set(LINKER_LANGUAGE CXX)
+find_package(OpenCV CONFIG REQUIRED)
+target_link_libraries(voml PRIVATE opencv_world)
 
-add_library(${PROJECT_NAME} OBJECT ./voml.hpp ./details.hpp ./opencv.hpp)
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR} ${OpenCV_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS} )
 
-set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
+if (voml_BUILD_EXAMPLE)
+    add_subdirectory(example)
+endif ()

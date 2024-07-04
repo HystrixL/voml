@@ -1,5 +1,6 @@
 .xmake/
 .vscode/
+.cache/
 build/
 .clang-*
 *.out
